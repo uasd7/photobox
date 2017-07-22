@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="image-container"></div>
+</body>
+
+<script>
+    // You can also require other files to run in this process
+    (function () {
+        require('./renderer.js');
+        let electron = require('electron');
+        let glob = require("glob");
+        let fs = require("fs");
+
+        let userPath = electron.remote.getGlobal('sharedObject').userPath;
+        let statsArray = {};
+        let imageContainer = document.querySelector('#image-container');
+
+        let slideChangeTransition = function (newFile) {
+            let newSlide = document.createElement('DIV');
+            newSlide.style.backgroundImage = 'url("' + newFile + '")';
+            newSlide.classList.add('slide');
+            newSlide.classList.add('out');
+            imageContainer.appendChild(newSlide);
+            window.setTimeout(function () {
+                newSlide.classList.remove('out');
+
+                if (imageContainer.childNodes.length > 1) {
+                    imageContainer.firstChild.classList.add('fade-out');
+                    window.setTimeout(function () {
+                        if (imageContainer.childNodes.length > 1) {
+                            imageContainer.removeChild(imageContainer.firstChild);
+                        }
+                    }, 1000);
+                }
+            }, 500);
+            while (imageContainer.childNodes.length > 2) {
+                imageContainer.removeChild(imageContainer.firstChild);
+            }
+
+        };
+        window.setInterval(function () {
+            glob(userPath + '/Desktop/*.png', false, function (err, files) {
+                let newestFile = {
+                    time: 0,
+                    name: false,
+                };
+                files.forEach(function (file) {
+                    if (!statsArray[file]) {
+                        statsArray[file] = fs.statSync(file).mtime;
+                        if (statsArray[file] > newestFile.time) {
+                            newestFile.time = statsArray[file];
+                            newestFile.name = file;
+                            slideChangeTransition(file);
+                        }
+                    }
+                });
+            });
+        }, 1000);
+    })();
+</script>
+</html>

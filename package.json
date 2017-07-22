@@ -1,0 +1,18 @@
+{
+  "name": "photobox",
+  "version": "1.0.0",
+  "description": "A minimal photobox slider",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "Electron",
+    "Photobox"
+  ],
+  "author": "sts",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "~1.6.2"
+  }
+}

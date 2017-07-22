@@ -1,0 +1,32 @@
+* {
+    box-sizing: border-box;
+}
+
+#image-container {
+    position: absolute;
+    background-color: #222222;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    .slide {
+        position: absolute;
+        top: 1vh;
+        left: 1vw;
+        bottom: 1vh;
+        width: 98vw;
+        background: no-repeat center;
+        background-size: contain;
+        transition: transform 1000ms ease-out, opacity 1000ms ease-in;
+        transform: translateX(0);
+
+        &.out {
+            transform: translateX(103%);
+        }
+
+        &.fade-out {
+            opacity: 0;
+        }
+    }
+}
